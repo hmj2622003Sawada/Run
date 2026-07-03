@@ -9,12 +9,13 @@ const int FPS = 60;
 const int ITEM_MAX = 0; // oŒ»‚·‚éáŠQ•¨‚Ì”
 const int STAGE_DISTANCE = FPS * 60; // ƒXƒe[ƒW‚Ì’·‚³
 const int PLAYER_SPEED = 10; // ƒvƒŒƒCƒ„[‚Ì‘¬“x
-enum { TITLE, PLAY, OVER, CLEAR};
+enum { desk, isu, bed}; // áŠQ•¨
+enum { TITLE, PLAY, OVER, CLEAR}; // ƒV[ƒ“
 int bgY = 0;
 
 
 // ƒOƒ[ƒoƒ‹•Ï”
-int imgFloor, imgWallL, imgWallR; // ”wŒi‰æ‘œ
+int imgFloor, imgTukue, imgBed, img; // ”wŒi‰æ‘œ
 int imgPlayer, imgEnemy; // ƒvƒŒƒCƒ„[‚Æ“G‚Ì‰æ‘œ
 int bgm, jinOver, jinClear; // ‰¹
 int scene = TITLE; // ƒV[ƒ“ŠÇ—
@@ -30,7 +31,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	SetDrawScreen(DX_SCREEN_BACK); // •`‰æ–Ê‚ð— ‰æ–Ê‚É‚·‚é
 
 	InitGame();
-
+	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
 
 	while (1)
 	{
@@ -59,15 +60,16 @@ void InitGame(void)
 {
 	// ”wŒi‰æ‘œ
 	imgFloor = LoadGraphWithCheck("image/floor.png");
+	imgTukue = LoadGraphWithCheck("image/desk.png");
 
 	// ”wŒã‚Ì“G(‰æ‘œ‚ªŒ©‚Â‚©‚èŽŸ‘æƒRƒƒ“ƒg‰ðœ)
-	// imgEnemy = LoadGraphWithCheck("image/enemy.png");
+	imgEnemy = LoadGraphWithCheck("image/back.png");
 	
 	// ƒTƒEƒ“ƒh‚Ì“Ç‚Ýž‚Ý‚Æ‰¹—ÊÝ’è(‰¹‚ð’T‚µ‚½‚çƒRƒƒ“ƒg‰ðœ)
-	// bgm = LoadSoundMemWithCheck("sound/    .mp3");
+	 bgm = LoadSoundMemWithCheck("sound/bgmsound.wav");
 	// jinOver = LoadSoundMemWithCheck("sound/    .mp3");
 	// jinClear = LoadSoundMemWithCheck("sound/    .mp3");
-	// ChangeVolumeSoundMem(128, bgm);
+	 ChangeVolumeSoundMem(128, bgm);
 	// ChangeVolumeSoundMem(128, jinOver);
 	// ChangeVolumeSoundMem(128, jinClear);
 }
@@ -79,7 +81,9 @@ void ScrollBG(int spd)
 	if (bgY >= FloorH) bgY = bgY - FloorH;
 	DrawGraph(0, bgY - FloorH, imgFloor, FALSE);
 	DrawGraph(0, bgY, imgFloor, FALSE);
+	DrawExtendGraph(0, 900, 586, 1243, imgEnemy, TRUE);
 }
+ 
 
 
 

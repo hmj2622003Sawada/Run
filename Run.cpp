@@ -4,14 +4,16 @@
 
 // 定数の定義
 const int WIDTH = 720, HEIGHT = 1000; // ウィンドウの幅と高さ
-const int FloorW = 720, FloorH = 2170;
+const int FloorW = 720, FloorH = 2170; // 背景画像の縦横の高さ
 const int FPS = 60;
-const int ITEM_MAX = 0; // 出現する障害物の数
-const int STAGE_DISTANCE = FPS * 60; // ステージの長さ
-const int PLAYER_SPEED = 10; // プレイヤーの速度
-enum { desk, isu}; // 障害物
+const int PLAYER_SPEED = 10; // プレイヤーの速度 
+const int Item_Type = 2; // アイテムの数
 enum { TITLE, RULE, PLAY, OVER, CLEAR}; // シーン
-int bgY = 0;
+int stage_rand; // ステージの長さを変える乱数
+int stage_distance; // ステージの長さ
+int bgY = 0; // 背景画像のスクロールスピード
+int Timer = 0; // 画像を切り替える用のタイマー
+int distance = 0;
 
 // プレイヤーの変数１
 int PlayerX = WIDTH / 2;
@@ -19,21 +21,29 @@ int PlayerY = 600;
 int PlayerW = 79;
 int PlayerH = 118;
 
+// 障害物の定数、変数
+enum { desk, isu };
+const int ITEM_MAX = 2;
+struct OBJECT Item[ITEM_MAX]; // 障害物用の構造体配列
+int imgItem[ITEM_MAX]; // 障害物の画像
 
-// 障害物の変数
+
 
 // グローバル変数
 int imgPlayer1, imgPlayer2; // プレイヤー画像
-int imgFloor, imgTukue, imgIsu, imgOver, imgClear; // 背景画像
+int imgFloor, imgTukue, imgIsu, imgOver, imgClear, imgGoal; // 背景画像
 int imgPlayer, imgEnemy; // プレイヤーと敵の画像
 int bgm, jinOver, jinClear; // 音
 int scene = TITLE; // シーン管理
 int timer = 0; // 時間管理
-bool Flag = 1;
+bool Flag = 0;
+
+
 
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+	
 	SetWindowText("Run Game"); // ウィドウのタイトル
 	SetGraphMode(WIDTH, HEIGHT, 32); // ウィンドウの設定
 	ChangeWindowMode(TRUE); // ウィンドウモードで起動
@@ -41,13 +51,18 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	SetBackgroundColor(0, 0, 0); // 背景色
 	SetDrawScreen(DX_SCREEN_BACK); // 描画面を裏画面にする
 
+	MoveItem();
+	RandStage();
 	InitGame();
 	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
+	int distance = stage_distance;
+
+
 
 	while (1)
 	{
 		ClearDrawScreen(); // 画面クリア
-
+		RandStage();
 		// ゲームの根幹
 		
 		switch (scene)
@@ -73,26 +88,35 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		case PLAY:
 			ScrollBG(1);
-			// 仮
+			DrawPlayer();
+			MovePlayer();
+			if (distance == stage_distance)
+			{
+				PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
+
+			}
+			if (distance > 0) distance--;
+			if (100 < distance && distance % 20 == 0)
+			{
+				int x = 134 + rand() % (WIDTH - 134);
+				int y = -50;
+				int i = rand() % 2;
+				if (i == desk); // SetItem(x, y, 0, 10, desk, imgItem[desk]);
+				if (i == isu);  // SetItem(x, y, 0, 10, isu, imgItem[isu]);
+			}
 			if (CheckHitKey(KEY_INPUT_O))
 			{
-				StopSoundMem(bgm);
 				scene = OVER;
 			}
-			if (CheckHitKey(KEY_INPUT_C))
+			if (distance == 0)
 			{
 				StopSoundMem(bgm);
 				scene = CLEAR;
-			}
-
-
-			if (Flag == 1)
-			{
-				MovePlayer();
-				PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
-				// MoveItem();
+				timer = 0;
+				break;
 			}
 			break;
+	
 
 		case OVER:
 			DrawExtendGraph(0, 0, 720, 1000, imgEnemy, TRUE);
@@ -144,6 +168,7 @@ void InitGame(void)
 	imgIsu = LoadGraphWithCheck("image/isu.png");
 	imgOver = LoadGraphWithCheck("image/back.png");
 	imgClear = LoadGraphWithCheck("image/clear.jpg");
+	// imgGoal = LoadGraphWithCheck("image/goal.jpg");
 
 	// 背後の敵(画像が見つかり次第コメント解除)
 	imgEnemy = LoadGraphWithCheck("image/back.png");
@@ -165,12 +190,29 @@ void ScrollBG(int spd)
 	DrawGraph(0, bgY - FloorH, imgFloor, FALSE);
 	DrawGraph(0, bgY, imgFloor, FALSE);
 	DrawExtendGraph(0, 850, 720, 1243, imgEnemy, FALSE);
-	DrawGraph(PlayerX, PlayerY, imgPlayer1, TRUE);
-	// DrawGraph(PlayerX, PlayerY, imgPlayer2, TRUE);
-	DrawExtendGraph(200, 100,350 , 150, imgIsu, TRUE); // 仮
 }
  
+// プレイヤーの表示
+void DrawPlayer()
+{
+	
+	Timer++;
+	if (Timer % 30 < 15)
+	{
+		DrawGraph(PlayerX, PlayerY, imgPlayer1, TRUE);
+	}
+	else if (Timer % 30 >= 15)
+	{
+		DrawTurnGraph(PlayerX, PlayerY, imgPlayer1, TRUE);
+	}
 
+}
+
+void RandStage()
+{
+	stage_rand = GetRand(43) + 17;
+	stage_distance = FPS * stage_rand; // ステージの長さ
+}
 
 
 
@@ -221,14 +263,44 @@ void MovePlayer()
 	}
 }
 
-int SetItem(int x, int y, int ptn, int img)
+void DrawImage(int img, int x, int y)
 {
-
+	int w, h;
+	GetGraphSize(img, &w, &h);
+	DrawGraph(x - w / 2, y - h / 2,img, TRUE);
 }
 
-
-void MoveItem()
+void SetItem(void)
 {
+	for (int i = 0; i < ITEM_MAX; i++)
+	{
+		if (Item[i].state == 0)
+		{
+			Item[i].x = (WIDTH / 4) * (1+ rand() % 3);
+			Item[i].y = -20;
+			Item[i].vx = 0;
+			Item[i].vy = 10;
+			Item[i].state = 1;
+			Item[i].timer = 0;
+			return ;
+		}
+	}
+}
 
+void MoveItem(void)
+{
+	for (int i = 0; i < ITEM_MAX; i++)
+	{
+		if (Item[i].state == 0) continue;
+		Item[i].x += Item[i].vx;
+		Item[i].y += Item[i].vy;
+		
+		DrawImage(Item[i].image, Item[i].x, Item[i].y);
+		// 画面外処理
+		if (Item[i].y> HEIGHT)
+		{
+			Item[i].state == 0;
+		}
+	}
 }
 // 724 * 2172 画像のサイズ

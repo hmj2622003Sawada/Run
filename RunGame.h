@@ -17,14 +17,32 @@ struct OBJECT // 自機用
 
 // 関数宣言
 void InitGame(void);
-void ScrollBG(int sod);
+void ScrollBG(int spd);
+void InitVariable(void);
+void DrawImage(int img, int x, int y);
+void MovePlayer(void);
+int SetItem(int x, int y, int vx, int vy, int ptn, int img);
+void MoveItem(void);
 void DrawTextC(int x, int y, const char* txt, int col, int siz);
+
+
 int LoadGraphWithCheck(const char* file);
 int LoadSoundMemWithCheck(const char* file);
-void DrawTextC(int x, int y, const char* txt, int col, int siz);
-void MovePlayer(void);
-void SetItem(void);
-void MoveItem(void);
-void DrawPlayer(void);
 void RandStage(void);
-void DrawImage(int img, int x, int y);
+void DrawEnemy(void);
+
+
+// 前までに使っていた関数
+//void InitGame(void);
+//void ScrollBG(int sod);
+//void DrawTextC(int x, int y, const char* txt, int col, int siz);
+//int LoadGraphWithCheck(const char* file);
+//int LoadSoundMemWithCheck(const char* file);
+//void DrawTextC(int x, int y, const char* txt, int col, int siz);
+//void MovePlayer(void);
+//void SetItem(void);
+//void MoveItem(void);
+//void DrawPlayer(void);
+//void RandStage(void);
+//void DrawImage(int img, int x, int y);
+//void InitVariable(void);

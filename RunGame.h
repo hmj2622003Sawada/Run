@@ -24,25 +24,7 @@ void MovePlayer(void);
 int SetItem(int x, int y, int vx, int vy, int ptn, int img);
 void MoveItem(void);
 void DrawTextC(int x, int y, const char* txt, int col, int siz);
-
-
 int LoadGraphWithCheck(const char* file);
 int LoadSoundMemWithCheck(const char* file);
 void RandStage(void);
 void DrawEnemy(void);
-
-
-// ëOÇ‹Ç≈Ç…égÇ¡ÇƒÇ¢ÇΩä÷êî
-//void InitGame(void);
-//void ScrollBG(int sod);
-//void DrawTextC(int x, int y, const char* txt, int col, int siz);
-//int LoadGraphWithCheck(const char* file);
-//int LoadSoundMemWithCheck(const char* file);
-//void DrawTextC(int x, int y, const char* txt, int col, int siz);
-//void MovePlayer(void);
-//void SetItem(void);
-//void MoveItem(void);
-//void DrawPlayer(void);
-//void RandStage(void);
-//void DrawImage(int img, int x, int y);
-//void InitVariable(void);

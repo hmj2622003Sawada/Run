@@ -8,7 +8,7 @@ const int WIDTH = 720, HEIGHT = 1000; // 画面サイズ
 const int FloorW = 720, FloorH = 2170; // 背景画像の縦横の高さ
 const int FPS = 60; // フレームレート
 const int IMG_ITEM_MAX = 2; /// 障害物の数
-const int ITEM_MAX = 50; // 障害物の最大数
+const int ITEM_MAX = 200; // 障害物の最大数
 int stage_rand; // ステージの距離を決める乱数
 int stage_distance; // ステージの距離
 enum { ITEM_01, ITEM_02 }; // アイテムの種類

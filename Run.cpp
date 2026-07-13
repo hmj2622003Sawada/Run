@@ -118,7 +118,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			DrawExtendGraph(0, 0, 720, 1000, imgClear, FALSE);
 			DrawTextC(WIDTH * 0.5, HEIGHT * 0.3, "GAME CLEAR", 0xf0f0f0, 80);
 			DrawTextC(WIDTH * 0.5, HEIGHT * 0.5, "Ç†Ç»ÇΩÇÕì¶Ç∞êÿÇ¡ÇΩ", 0xf0f0f0, 80);
-			DrawTextC(WIDTH * 0.5, HEIGHT * 0.7, "Press to R key", 0xffffff, 30);
+			DrawTextC(WIDTH * 0.5, HEIGHT * 0.7, "Press R key to", 0xffffff, 30);
 			DrawTextC(WIDTH * 0.5, HEIGHT * 0.8, "Return TITLE", 0xffffff, 30);
 			if (CheckHitKey(KEY_INPUT_R))
 			{
